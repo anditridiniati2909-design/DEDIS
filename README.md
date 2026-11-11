@@ -26,9 +26,52 @@ Mitra: Posyandu Anggrek 4.
 ```
 app/        Aplikasi Android
 backend/    REST API Laravel
-docs/       Dokumentasi (cara menjalankan, hasil audit integrasi)
-design/     Screenshot desain dan DESIGN.md
+docs/       Dokumentasi (cara menjalankan, hasil audit integrasi, screenshot)
+DESIGN.md   Panduan desain (warna, tipografi, daftar layar)
 ```
+
+## Cara menjalankan
+
+Langkah lengkap ada di [docs/CARA_MENJALANKAN.md](docs/CARA_MENJALANKAN.md). Ringkasnya:
+
+1. Jalankan backend dari folder `backend/`:
+   ```
+   composer install
+   cp .env.example .env
+   php artisan key:generate
+   php artisan migrate --seed
+   php artisan serve --host=0.0.0.0 --port=8000
+   ```
+2. Atur `BASE_URL` di aplikasi Android (emulator: `http://10.0.2.2:8000/api/`; HP asli: alamat laptop di Wi-Fi yang sama).
+3. Buka folder proyek di Android Studio, lalu jalankan aplikasi.
+
+## Status fitur
+
+Status per minggu 12.
+
+| Fitur | Status |
+|---|---|
+| Splash Screen, On-boarding, pemilihan peran | Tampilan selesai |
+| Login dan Register | Tampilan selesai |
+| Sesi login (masuk otomatis) dan Logout | Selesai |
+| Dashboard orang tua dan kader | Tampilan selesai, memakai data contoh |
+| Daftar balita dan Detail balita (kader) | Terhubung ke backend, dalam pengujian |
+| Catat pengukuran dan perhitungan Z-score | Dalam pengerjaan |
+| Hasil pertumbuhan orang tua | Dalam pengerjaan |
+| Tindak lanjut dan Tambah balita | Dalam pengerjaan |
+| Pindai QR | Dalam pengerjaan |
+| Pesan orang tua dan kader | Direncanakan |
+| Jadwal dan pengingat | Direncanakan |
+
+## Desain
+
+Desain UI/UX dibuat di Figma: [Buka prototype](https://www.figma.com/proto/gtSMdOFQcn8PzrWkeBbyKd/Untitled?node-id=9-3&p=f&t=c3BPRXIDgb1PUyYi-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=9%3A3&show-proto-sidebar=1)
+
+Panduan warna, tipografi, dan daftar layar ada di [DESIGN.md](DESIGN.md).
+
+<!--
+Hapus tanda pembuka dan penutup komentar ini setelah gambar sudah diunggah ke docs/screenshots.
+
 ## Tampilan Aplikasi
 
 Screenshot dari aplikasi yang berjalan, memakai data contoh.
@@ -50,41 +93,7 @@ Screenshot dari aplikasi yang berjalan, memakai data contoh.
 | Beranda | Daftar Balita | Detail Balita | Catat Ukur | Pindai QR |
 |:---:|:---:|:---:|:---:|:---:|
 | <img src="docs/screenshots/kader-beranda.jpeg" width="150"> | <img src="docs/screenshots/kader-daftar.jpeg" width="150"> | <img src="docs/screenshots/kader-detail.jpeg" width="150"> | <img src="docs/screenshots/kader-ukur.jpeg" width="150"> | <img src="docs/screenshots/kader-qr.jpeg" width="150"> |
-
-## Cara menjalankan
-
-Langkah lengkap ada di [docs/CARA_MENJALANKAN.md](docs/CARA_MENJALANKAN.md). Ringkasnya:
-
-1. Jalankan backend dari folder `backend/`:
-   ```
-   composer install
-   cp .env.example .env
-   php artisan key:generate
-   php artisan migrate --seed
-   php artisan serve --host=0.0.0.0 --port=8000
-   ```
-2. Atur `BASE_URL` di aplikasi Android (emulator: `http://10.0.2.2:8000/api/`; HP asli: alamat laptop di Wi-Fi yang sama).
-3. Buka folder proyek di Android Studio, lalu jalankan aplikasi.
-
-## Status fitur
-
-Centang sesuai kondisi sebenarnya.
-
-- [ ] Splash Screen, On-boarding, pemilihan peran
-- [ ] Login dan Register
-- [ ] Sesi login (masuk otomatis) dan Logout
-- [ ] Dashboard orang tua dan kader
-- [ ] Daftar balita dan Detail balita (data dari backend)
-- [ ] Catat pengukuran dan perhitungan Z-score
-- [ ] Hasil pertumbuhan orang tua
-- [ ] Tindak lanjut
-- [ ] Pindai QR
-- [ ] Pesan orang tua dan kader
-- [ ] Jadwal dan pengingat
-
-## Desain
-
-Desain UI/UX: [tempel link Figma di sini]
+-->
 
 ## Catatan data
 
