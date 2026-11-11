@@ -29,6 +29,27 @@ backend/    REST API Laravel
 docs/       Dokumentasi (cara menjalankan, hasil audit integrasi)
 design/     Screenshot desain dan DESIGN.md
 ```
+## Tampilan Aplikasi
+
+Screenshot dari aplikasi yang berjalan, memakai data contoh.
+
+**Umum**
+
+| Splash | On-boarding | Pilih Peran | Login | Register |
+|:---:|:---:|:---:|:---:|:---:|
+| <img src="docs/screenshots/splash.jpeg" width="150"> | <img src="docs/screenshots/onboarding.jpeg" width="150"> | <img src="docs/screenshots/pilih-peran.jpeg" width="150"> | <img src="docs/screenshots/login.jpeg" width="150"> | <img src="docs/screenshots/register.jpeg" width="150"> |
+
+**Orang Tua**
+
+| Beranda | Pertumbuhan | Jadwal | Edukasi | Profil |
+|:---:|:---:|:---:|:---:|:---:|
+| <img src="docs/screenshots/ortu-beranda.jpeg" width="150"> | <img src="docs/screenshots/ortu-pertumbuhan.jpeg" width="150"> | <img src="docs/screenshots/ortu-jadwal.jpeg" width="150"> | <img src="docs/screenshots/ortu-edukasi.jpeg" width="150"> | <img src="docs/screenshots/ortu-profil.jpeg" width="150"> |
+
+**Kader**
+
+| Beranda | Daftar Balita | Detail Balita | Catat Ukur | Pindai QR |
+|:---:|:---:|:---:|:---:|:---:|
+| <img src="docs/screenshots/kader-beranda.jpeg" width="150"> | <img src="docs/screenshots/kader-daftar.jpeg" width="150"> | <img src="docs/screenshots/kader-detail.jpeg" width="150"> | <img src="docs/screenshots/kader-ukur.jpeg" width="150"> | <img src="docs/screenshots/kader-qr.jpeg" width="150"> |
 
 ## Cara menjalankan
 
