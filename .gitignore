@@ -1,0 +1,56 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+
+# ===== Android =====
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+app/build/
+app/release/
+
+# Kunci dan berkas rahasia (JANGAN diunggah)
+*.jks
+*.keystore
+google-services.json
+keystore.properties
+
+# Hasil build (kirim lewat Google Drive, bukan GitHub)
+*.apk
+*.aab
+
+# ===== Laravel (backend/) =====
+backend/vendor/
+backend/node_modules/
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/storage/*.key
+backend/storage/logs/
+backend/storage/framework/cache/
+backend/storage/framework/sessions/
+backend/storage/framework/views/
+backend/database/*.sqlite
+backend/public/hot
+backend/public/storage
+backend/.phpunit.result.cache
+backend/auth.json

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Izinkan HTTP (cleartext) hanya untuk pengujian lokal / pengembangan saat build debug -->
+    <application
+        android:usesCleartextTraffic="true" />
+</manifest>
+

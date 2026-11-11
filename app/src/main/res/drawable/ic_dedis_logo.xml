@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+    <!-- Rounded Background Container -->
+    <path
+        android:fillColor="#E8F5E9"
+        android:pathData="M 20,0 L 60,0 A 20,20 0 0 1 80,20 L 80,60 A 20,20 0 0 1 60,80 L 20,80 A 20,20 0 0 1 0,60 L 0,20 A 20,20 0 0 1 20,0 Z" />
+
+    <!-- Sprout / Leaf Stem -->
+    <path
+        android:fillColor="#18633B"
+        android:pathData="M38,54 C38,54 39,40 40,34 C41,28 46,24 52,23 C58,22 60,27 55,31 C50,35 42,35 41,38 C40,41 39,54 38,54 Z" />
+    <path
+        android:fillColor="#18633B"
+        android:pathData="M39,40 C34,39 26,38 24,32 C22,26 28,24 33,27 C38,30 38,36 39,40 Z" />
+</vector>
