@@ -1,0 +1,156 @@
+<mxfile host="app.diagrams.net" agent="Antigravity">
+  <diagram id="dedis-architecture-diagram" name="Arsitektur CRUD REST API DEDIS">
+    <mxGraphModel dx="1710" dy="1016" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#1E293B;" value="DIAGRAM ARSITEKTUR SISTEM DEDIS&#xa;Koneksi Client Android, REST API, Operasi CRUD &amp; Basis Data MySQL" vertex="1">
+          <mxGeometry height="40" width="700" x="350" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="col1_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;strokeWidth=2;arcSize=6;" value="" vertex="1">
+          <mxGeometry height="740" width="220" x="40" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="col1_header" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#16A34A;strokeColor=#15803D;fontColor=#FFFFFF;fontStyle=1;fontSize=13;arcSize=8;" value="1. CLIENT LAYER&#xa;(Android Jetpack Compose)" vertex="1">
+          <mxGeometry height="50" width="200" x="50" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_ui" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#86EFAC;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;Antarmuka Pengguna (UI)&lt;/b&gt;&lt;br/&gt;• Form Input Balita/Ukur&lt;br/&gt;• Grafik Pertumbuhan KMS&lt;br/&gt;• Fitur Chat &amp; Tanya AI&lt;br/&gt;• QR Code Scanner" vertex="1">
+          <mxGeometry height="100" width="190" x="55" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_vm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#86EFAC;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;ViewModel &amp; State&lt;/b&gt;&lt;br/&gt;• StateFlow &amp; LiveData&lt;br/&gt;• Validasi input di sisi HP&lt;br/&gt;• Coroutines (Dispatchers.IO)" vertex="1">
+          <mxGeometry height="90" width="190" x="55" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_session" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#86EFAC;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;Local Storage / Session&lt;/b&gt;&lt;br/&gt;• SharedPreferences&lt;br/&gt;• Simpan Auth Token&lt;br/&gt;• Pengaturan Notifikasi &amp; Tema" vertex="1">
+          <mxGeometry height="90" width="190" x="55" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_retrofit" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#22C55E;fontStyle=1;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;Networking Client&lt;/b&gt;&lt;br/&gt;• Retrofit 2 REST Client&lt;br/&gt;• OkHttp Interceptor (Bearer)&lt;br/&gt;• JSON Converter (Gson/Moshi)" vertex="1">
+          <mxGeometry height="95" width="190" x="55" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="col2_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0F9FF;strokeColor=#0284C7;strokeWidth=2;arcSize=6;" value="" vertex="1">
+          <mxGeometry height="740" width="220" x="300" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="col2_header" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0284C7;strokeColor=#0369A1;fontColor=#FFFFFF;fontStyle=1;fontSize=13;arcSize=8;" value="2. REST API LAYER&#xa;(HTTP / JSON Protocol)" vertex="1">
+          <mxGeometry height="50" width="200" x="310" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_req" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7DD3FC;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;HTTP Request Message&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#0284c7&quot;&gt;&lt;b&gt;• Headers:&lt;/b&gt;&lt;/font&gt;&lt;br/&gt;  Authorization: Bearer [Token]&lt;br/&gt;  Content-Type: application/json&lt;br/&gt;&lt;font color=&quot;#0284c7&quot;&gt;&lt;b&gt;• Body Payload:&lt;/b&gt;&lt;/font&gt;&lt;br/&gt;  JSON String Data" vertex="1">
+          <mxGeometry height="120" width="190" x="315" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_endpoints" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#38BDF8;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;Contoh Endpoint REST API:&lt;/b&gt;&lt;br/&gt;• &lt;font color=&quot;#16a34a&quot;&gt;&lt;b&gt;POST&lt;/b&gt;&lt;/font&gt; /api/login&lt;br/&gt;• &lt;font color=&quot;#0284c7&quot;&gt;&lt;b&gt;GET&lt;/b&gt;&lt;/font&gt; /api/balita&lt;br/&gt;• &lt;font color=&quot;#16a34a&quot;&gt;&lt;b&gt;POST&lt;/b&gt;&lt;/font&gt; /api/pengukuran&lt;br/&gt;• &lt;font color=&quot;#d97706&quot;&gt;&lt;b&gt;PUT&lt;/b&gt;&lt;/font&gt; /api/orang-tua/profil&lt;br/&gt;• &lt;font color=&quot;#dc2626&quot;&gt;&lt;b&gt;DELETE&lt;/b&gt;&lt;/font&gt; /api/balita/{id}" vertex="1">
+          <mxGeometry height="150" width="190" x="315" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_res" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7DD3FC;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;HTTP Response Message&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#0284c7&quot;&gt;&lt;b&gt;• Status Codes:&lt;/b&gt;&lt;/font&gt;&lt;br/&gt;  200 OK (Read/Update sukses)&lt;br/&gt;  201 Created (Create sukses)&lt;br/&gt;  422 Unprocessable (Validasi)&lt;br/&gt;  401 Unauthorized (Token salah)&lt;br/&gt;&lt;font color=&quot;#0284c7&quot;&gt;&lt;b&gt;• Response JSON Data&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="160" width="190" x="315" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="col3_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF2F2;strokeColor=#DC2626;strokeWidth=2;arcSize=6;" value="" vertex="1">
+          <mxGeometry height="740" width="220" x="560" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="col3_header" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DC2626;strokeColor=#B91C1C;fontColor=#FFFFFF;fontStyle=1;fontSize=13;arcSize=8;" value="3. BACKEND ROUTING&#xa;&amp;amp; CONTROLLER (Laravel 12)" vertex="1">
+          <mxGeometry height="50" width="200" x="570" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_route" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;API Router&lt;/b&gt;&lt;br/&gt;&lt;i&gt;routes/api.php&lt;/i&gt;&lt;br/&gt;Mengarahkan URI dan HTTP Verb ke Controller spesifik" vertex="1">
+          <mxGeometry height="80" width="190" x="575" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_auth" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;Middleware Keamanan&lt;/b&gt;&lt;br/&gt;• Laravel Sanctum Auth&lt;br/&gt;• Verifikasi Bearer Token&lt;br/&gt;• Cek Peran (Kader / Orang Tua)" vertex="1">
+          <mxGeometry height="85" width="190" x="575" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_controller" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#EF4444;fontStyle=1;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;API Controllers&lt;/b&gt;&lt;br/&gt;• PengukuranController&lt;br/&gt;• BalitaController&lt;br/&gt;• AuthController&lt;br/&gt;• AiConsultationController" vertex="1">
+          <mxGeometry height="95" width="190" x="575" y="395" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_valid" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;Validasi &amp; Logika Bisnis&lt;/b&gt;&lt;br/&gt;• FormRequest validation&lt;br/&gt;• Perhitungan Z-Score WHO&lt;br/&gt;• Deteksi Status Stunting" vertex="1">
+          <mxGeometry height="90" width="190" x="575" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="col4_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#9333EA;strokeWidth=2;arcSize=6;" value="" vertex="1">
+          <mxGeometry height="740" width="240" x="820" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="col4_header" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9333EA;strokeColor=#7E22CE;fontColor=#FFFFFF;fontStyle=1;fontSize=13;arcSize=8;" value="4. OPERASI CRUD&#xa;&amp;amp; ELOQUENT ORM" vertex="1">
+          <mxGeometry height="50" width="220" x="830" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="c4_create" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D8B4FE;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;1. CREATE (Tambah Data)&lt;/b&gt;&lt;br/&gt;• &lt;i&gt;Pengukuran::create([...])&lt;/i&gt;&lt;br/&gt;• Simpan data balita &amp; BB/TB baru&lt;br/&gt;• Menghasilkan record baru" vertex="1">
+          <mxGeometry height="85" width="210" x="835" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="c4_read" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D8B4FE;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;2. READ (Membaca Data)&lt;/b&gt;&lt;br/&gt;• &lt;i&gt;Balita::with(&#39;pengukurans&#39;)-&amp;gt;get()&lt;/i&gt;&lt;br/&gt;• Menarik riwayat perkembangan&lt;br/&gt;• Membaca daftar jadwal posyandu" vertex="1">
+          <mxGeometry height="85" width="210" x="835" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="c4_update" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D8B4FE;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;3. UPDATE (Perbarui Data)&lt;/b&gt;&lt;br/&gt;• &lt;i&gt;$balita-&amp;gt;update([...])&lt;/i&gt;&lt;br/&gt;• Mengubah status gizi balita&lt;br/&gt;• Memperbarui profil orang tua" vertex="1">
+          <mxGeometry height="85" width="210" x="835" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="c4_delete" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D8B4FE;fontSize=11;align=left;spacingLeft=10;" value="&lt;b&gt;4. DELETE (Hapus Data)&lt;/b&gt;&lt;br/&gt;• &lt;i&gt;$pengukuran-&amp;gt;delete()&lt;/i&gt;&lt;br/&gt;• Menghapus input data keliru&lt;br/&gt;• SoftDeletes / Hard Delete" vertex="1">
+          <mxGeometry height="85" width="210" x="835" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="col5_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;arcSize=6;" value="" vertex="1">
+          <mxGeometry height="740" width="540" x="1110" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="col5_header" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D97706;strokeColor=#B45309;fontColor=#FFFFFF;fontStyle=1;fontSize=13;arcSize=8;" value="5. BASIS DATA LAYER&#xa;(MySQL Database Server)" vertex="1">
+          <mxGeometry height="50" width="220" x="1245" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="c5_engine" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#FEF3C7;strokeColor=#F59E0B;fontSize=11;align=center;" value="&lt;b&gt;MySQL RDBMS Engine&lt;/b&gt;&lt;br/&gt;• Port Default: 3306&lt;br/&gt;• InnoDB Storage Engine&lt;br/&gt;• ACID Transaction Support" vertex="1">
+          <mxGeometry height="95" width="170" x="1270" y="165" as="geometry" />
+        </mxCell>
+        <mxCell id="c5_tbl_users" parent="1" style="shape=table;startSize=0;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=0;strokeColor=#FCD34D;fillColor=#FFFFFF;fontSize=10;align=left;spacingLeft=6;" value="&lt;b&gt;Tabel: users&lt;/b&gt;&lt;br/&gt;id, nama, email, no_hp,&lt;br/&gt;password, role (kader/orang_tua)" vertex="1">
+          <mxGeometry height="70" width="410" x="1175" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="c5_tbl_balitas" parent="1" style="shape=table;startSize=0;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=0;strokeColor=#FCD34D;fillColor=#FFFFFF;fontSize=10;align=left;spacingLeft=6;" value="&lt;b&gt;Tabel: balitas&lt;/b&gt;&lt;br/&gt;id, user_id, nik, nama, tgl_lahir,&lt;br/&gt;jenis_kelamin, status_stunting" vertex="1">
+          <mxGeometry height="70" width="430" x="1165" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="c5_tbl_ukur" parent="1" style="shape=table;startSize=0;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=0;strokeColor=#FCD34D;fillColor=#FFFFFF;fontSize=10;align=left;spacingLeft=6;" value="&lt;b&gt;Tabel: pengukurans&lt;/b&gt;&lt;br/&gt;id, balita_id, berat_badan, tinggi_badan,&lt;br/&gt;zscore_bbu, zscore_tbu, tgl_ukur" vertex="1">
+          <mxGeometry height="65" width="510" x="1120" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="c5_tbl_chats" parent="1" style="shape=table;startSize=0;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=0;strokeColor=#FCD34D;fillColor=#FFFFFF;fontSize=10;align=left;spacingLeft=6;" value="&lt;b&gt;Tabel: chats &amp; artikels&lt;/b&gt;&lt;br/&gt;id, sender_id, receiver_id, pesan,&lt;br/&gt;kategori_edukasi, status_baca" vertex="1">
+          <mxGeometry height="65" width="475" x="1142.5" y="565" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_1" edge="1" parent="1" source="c1_ui" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;strokeColor=#16A34A;strokeWidth=2;" target="c1_vm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_2" edge="1" parent="1" source="c1_vm" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;strokeColor=#16A34A;strokeWidth=2;" target="c1_retrofit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_3" edge="1" parent="1" source="c1_retrofit" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;strokeColor=#0284C7;strokeWidth=2;fontSize=10;labelBackgroundColor=#FFFFFF;" target="c2_req" value="HTTP POST/GET/PUT">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="280" y="627" />
+              <mxPoint x="280" y="230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flow_4" edge="1" parent="1" source="c2_req" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;strokeColor=#DC2626;strokeWidth=2;fontSize=10;labelBackgroundColor=#FFFFFF;" target="c3_route" value="Kirim Request">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_5" edge="1" parent="1" source="c3_route" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;strokeColor=#DC2626;strokeWidth=2;" target="c3_auth">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_6" edge="1" parent="1" source="c3_auth" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;strokeColor=#DC2626;strokeWidth=2;" target="c3_controller">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_7" edge="1" parent="1" source="c3_controller" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;strokeColor=#9333EA;strokeWidth=2;fontSize=10;labelBackgroundColor=#FFFFFF;" target="c4_create" value="Eksekusi Eloquent">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="800" y="442" />
+              <mxPoint x="800" y="212" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flow_8" edge="1" parent="1" source="c4_create" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;strokeColor=#D97706;strokeWidth=2;fontSize=10;labelBackgroundColor=#FFFFFF;" target="c5_engine" value="INSERT INTO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_9" edge="1" parent="1" source="c4_read" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.25;strokeColor=#D97706;strokeWidth=2;fontSize=10;labelBackgroundColor=#FFFFFF;" target="c5_tbl_balitas" value="SELECT * FROM">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_10" edge="1" parent="1" source="c5_tbl_ukur" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;strokeColor=#059669;strokeWidth=2;dashed=1;fontSize=10;labelBackgroundColor=#FFFFFF;" target="c2_res" value="Data Result dikembalikan via HTTP JSON Response">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1220" y="700" />
+              <mxPoint x="410" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flow_11" edge="1" parent="1" source="c2_res" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;strokeColor=#16A34A;strokeWidth=2;dashed=1;fontSize=10;labelBackgroundColor=#FFFFFF;" target="c1_retrofit" value="Kirim JSON ke HP">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="290" y="580" />
+              <mxPoint x="290" y="627" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
