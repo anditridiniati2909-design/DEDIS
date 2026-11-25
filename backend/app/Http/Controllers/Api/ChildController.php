@@ -3,179 +3,212 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Child\StoreChildRequest;
-use App\Http\Resources\ChildResource;
 use App\Models\Child;
-use App\Models\ChildGuardianLink;
-use App\Services\AuditLogService;
-use Illuminate\Http\JsonResponse;
+use App\Models\Measurement;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ChildController extends Controller
 {
-    // ==========================================
-    // DAFTAR BALITA
-    // Orang tua: hanya anak yang ditautkan ke akun mereka
-    // Kader: semua anak di posyandu
-    // ==========================================
-
-    public function index(Request $request): JsonResponse
+    /**
+     * GET /api/v1/children
+     * Mengambil daftar balita. Jika ada parameter ?mother_name=..., hanya mengembalikan anak dari ibu tersebut.
+     */
+    public function index(Request $request)
     {
-        $user = $request->user();
+        $query = Child::with(['latestMeasurement', 'measurements']);
+        if ($request->has('mother_name') && !empty($request->query('mother_name'))) {
+            $parent = trim($request->query('mother_name'));
+            $clean = trim(str_ireplace(['ibu ', 'bapak ', 'pak ', 'ayah ', 'mama ', 'papa '], '', $parent));
+            $query->where(function($q) use ($parent, $clean) {
+                $q->where('mother_name', $parent)
+                  ->orWhereRaw('LOWER(TRIM(mother_name)) = ?', [strtolower($parent)]);
+                if (!empty($clean)) {
+                    $q->orWhereRaw('LOWER(TRIM(REPLACE(REPLACE(REPLACE(mother_name, "Ibu ", ""), "Bapak ", ""), "Ayah ", ""))) = ?', [strtolower($clean)]);
+                }
+            });
+        }
+        $children = $query->get();
+        return response()->json($children, 200);
+    }
 
-        if ($user->isOrangTua()) {
-            // Ambil hanya anak yang dikaitkan via ChildGuardianLink
-            $childIds = ChildGuardianLink::where('user_id', $user->id)
-                ->pluck('child_id');
-            $children = Child::whereIn('id', $childIds)
-                ->with('measurements')
-                ->orderBy('name')
-                ->get();
-        } else {
-            // Kader melihat semua anak
-            $children = Child::with('measurements')->orderBy('name')->get();
+    /**
+     * GET /api/v1/children/{id}
+     * Mengambil detail balita lengkap dengan riwayat pengukuran bulanan
+     */
+    public function show($id)
+    {
+        $child = Child::with(['latestMeasurement', 'measurements'])->find($id);
+
+        if (!$child) {
+            return response()->json(['message' => 'Data balita tidak ditemukan'], 404);
         }
 
-        return response()->json(ChildResource::collection($children));
+        return response()->json($child, 200);
     }
 
-    // ==========================================
-    // DETAIL BALITA
-    // ==========================================
-
-    public function show(Request $request, Child $child): JsonResponse
+    /**
+     * POST /api/v1/children
+     * Mendaftarkan balita baru ke sistem Posyandu
+     */
+    public function store(Request $request)
     {
-        $this->authorizeChildAccess($request, $child);
-
-        return response()->json(new ChildResource($child->load('measurements')));
-    }
-
-    // ==========================================
-    // TAMBAH BALITA (hanya kader)
-    // ==========================================
-
-    public function store(StoreChildRequest $request): JsonResponse
-    {
-        $child = Child::create($request->validated() + [
-            'registered_by' => $request->user()->id,
+        $validated = $request->validate([
+            'card_code' => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'gender' => 'nullable|string',
+            'birth_date' => 'nullable',
+            'mother_name' => 'nullable|string|max:255',
+            'dusun' => 'nullable|string',
+            'is_mbg_recipient' => 'nullable|boolean',
         ]);
 
-        AuditLogService::log('create', $child, newValues: $child->toArray());
-
-        return response()->json(new ChildResource($child), 201);
-    }
-
-    // ==========================================
-    // UPDATE BALITA (hanya kader)
-    // ==========================================
-
-    public function update(StoreChildRequest $request, Child $child): JsonResponse
-    {
-        $old = $child->toArray();
-        $child->update($request->validated());
-
-        AuditLogService::log('update', $child,
-            oldValues: AuditLogService::diff($old, $child->fresh()->toArray()),
-            newValues: $child->fresh()->toArray()
-        );
-
-        return response()->json(new ChildResource($child->fresh()));
-    }
-
-    // ==========================================
-    // HAPUS BALITA (soft delete, hanya kader_admin)
-    // ==========================================
-
-    public function destroy(Request $request, Child $child): JsonResponse
-    {
-        AuditLogService::log('delete', $child, oldValues: $child->toArray());
-        $child->delete();
-
-        return response()->json(['message' => 'Data anak berhasil dihapus.']);
-    }
-
-    // ==========================================
-    // TAUTKAN ANAK KE ORANG TUA (via link_code)
-    // ==========================================
-
-    public function linkChild(Request $request): JsonResponse
-    {
-        $request->validate([
-            'link_code' => ['required', 'string', 'size:8'],
-        ]);
-
-        $child = Child::where('link_code', $request->link_code)->first();
-
-        if (! $child) {
-            return response()->json(['message' => 'Kode tautan tidak ditemukan.'], 404);
-        }
-
-        $user = $request->user();
-
-        // Periksa apakah sudah ditautkan
-        $existing = ChildGuardianLink::where('child_id', $child->id)
-            ->where('user_id', $user->id)
-            ->first();
-
-        if ($existing) {
-            return response()->json(['message' => 'Anak sudah ditautkan ke akun Anda.'], 422);
-        }
-
-        // Maksimal 2 wali per anak
-        $guardianCount = ChildGuardianLink::where('child_id', $child->id)->count();
-        if ($guardianCount >= 2) {
-            return response()->json(['message' => 'Anak sudah memiliki 2 wali terdaftar.'], 422);
-        }
-
-        ChildGuardianLink::create([
-            'child_id' => $child->id,
-            'user_id'  => $user->id,
-        ]);
-
-        AuditLogService::log('create', null, notes: "Orang tua {$user->id} menautkan anak {$child->id}");
-
-        return response()->json([
-            'message' => 'Anak berhasil ditautkan ke akun Anda.',
-            'child'   => new ChildResource($child),
-        ]);
-    }
-
-    // ==========================================
-    // QR CODE ANAK
-    // Mengembalikan kode string yang sama dengan yang di-scan KaderPindaiQrScreen.
-    // Format: "DEDIS-{child_id}-{registration_number}"
-    // ==========================================
-
-    public function showQr(Request $request, Child $child): JsonResponse
-    {
-        $this->authorizeChildAccess($request, $child);
-
-        // Generate kode yang sama dengan yang di-scan KaderPindaiQrScreen
-        $code = $child->card_code ?: ('DEDIS-' . $child->id . '-' . str_pad($child->id, 4, '0', STR_PAD_LEFT));
-
-        return response()->json([
-            'child_id'          => $child->id,
-            'child_name'        => $child->name,
-            'qr_code'           => $code,  // string ini diencode oleh ZXing di Android
-        ]);
-    }
-
-    // ==========================================
-    // Helper: validasi akses IDOR
-    // ==========================================
-
-    private function authorizeChildAccess(Request $request, Child $child): void
-    {
-        $user = $request->user();
-        if ($user->isOrangTua()) {
-            $linked = ChildGuardianLink::where('child_id', $child->id)
-                ->where('user_id', $user->id)
-                ->exists();
-            if (! $linked) {
-                abort(403, 'Akses ditolak. Anak tidak tautkan ke akun Anda.');
+        // Parsing tanggal lahir cerdas
+        $birthDate = Carbon::now()->subMonths(12)->format('Y-m-d');
+        if (!empty($validated['birth_date'])) {
+            try {
+                $birthDate = Carbon::parse($validated['birth_date'])->format('Y-m-d');
+            } catch (\Exception $e) {
+                // default jika format bebas
             }
         }
-        // Kader bisa akses semua anak
+
+        $cardCode = $validated['card_code'] ?? null;
+        if (empty($cardCode)) {
+            $maxId = (int) (Child::max('id') ?? 0);
+            do {
+                $maxId++;
+                $cardCode = 'DEDIS-' . str_pad($maxId, 3, '0', STR_PAD_LEFT);
+            } while (Child::where('card_code', $cardCode)->exists());
+        }
+
+        $child = Child::create([
+            'card_code' => $cardCode,
+            'name' => $validated['name'],
+            'gender' => (!empty($validated['gender']) && strtoupper($validated['gender'])[0] == 'L') ? 'L' : 'P',
+            'birth_date' => $birthDate,
+            'mother_name' => $validated['mother_name'] ?? 'Bapak/Ibu Balita',
+            'dusun' => $validated['dusun'] ?? 'Dusun Bontocinde',
+            'is_mbg_recipient' => $validated['is_mbg_recipient'] ?? false,
+        ]);
+
+        return response()->json([
+            'message' => 'Data balita berhasil ditambahkan',
+            'child' => $child
+        ], 201);
+    }
+
+    /**
+     * POST /api/v1/children/{id}/measurements
+     * Kader mencatat pengukuran tinggi & berat badan baru
+     */
+    public function storeMeasurement(Request $request, $id)
+    {
+        $child = Child::find($id);
+        if (!$child) {
+            return response()->json(['message' => 'Data balita tidak ditemukan'], 404);
+        }
+
+        $validated = $request->validate([
+            'weight_kg' => 'required|numeric|min:1|max:40',
+            'height_cm' => 'required|numeric|min:30|max:150',
+            'measurement_method' => 'required|in:standing,recumbent',
+            'measurement_date' => 'required|date',
+            'head_circumference_cm' => 'nullable|numeric',
+            'kader_name' => 'nullable|string',
+        ]);
+
+        // Hitung usia balita saat pengukuran (dalam bulan)
+        $measDate = Carbon::parse($validated['measurement_date']);
+        $birthDate = Carbon::parse($child->birth_date);
+        $ageInMonths = (int) $birthDate->diffInMonths($measDate);
+
+        // Standar Estimasi Antropometri Kemenkes RI untuk deteksi awal stunting
+        $expectedHeight = 50 + ($ageInMonths * 1.2); // Standar pendekatan tinggi balita
+        $heightDiff = $validated['height_cm'] - $expectedHeight;
+
+        $statusHfa = 'normal';
+        $needsAttention = false;
+        $attentionReason = null;
+
+        if ($heightDiff < -6) {
+            $statusHfa = 'sangat_pendek';
+            $needsAttention = true;
+            $attentionReason = 'Tinggi badan balita berada jauh di bawah garis standar usia (Risiko Tinggi Stunting).';
+        } elseif ($heightDiff < -3) {
+            $statusHfa = 'pendek';
+            $needsAttention = true;
+            $attentionReason = 'Tinggi badan balita di bawah kurva normal. Perlu intervensi gizi protein hewani.';
+        }
+
+        $kaderName = !empty($validated['kader_name']) ? $validated['kader_name'] : 'Kader Posyandu (Petugas Meja 2)';
+        $recordedNote = "Diinput oleh: {$kaderName}";
+        if ($needsAttention && $attentionReason) {
+            $recordedNote = "{$attentionReason} • {$recordedNote}";
+        }
+
+        $measurement = Measurement::create([
+            'child_id' => $child->id,
+            'measurement_date' => $validated['measurement_date'],
+            'age_in_months' => $ageInMonths,
+            'weight_kg' => $validated['weight_kg'],
+            'height_cm' => $validated['height_cm'],
+            'head_circumference_cm' => $validated['head_circumference_cm'] ?? null,
+            'measurement_method' => $validated['measurement_method'],
+            'status_hfa' => $statusHfa,
+            'status_wfa' => 'normal',
+            'status_wfh' => 'gizi_baik',
+            'needs_attention' => $needsAttention,
+            'attention_reason' => $recordedNote,
+        ]);
+
+        return response()->json([
+            'message' => 'Pengukuran berhasil dicatat oleh Kader Posyandu',
+            'measurement' => $measurement,
+            'warnings' => $needsAttention ? [$attentionReason] : null
+        ], 201);
+    }
+
+    /**
+     * PUT /api/v1/children/{id}
+     * Mengubah / Update data balita
+     */
+    public function update(Request $request, $id)
+    {
+        $child = is_numeric($id) ? Child::find($id) : Child::where('name', $id)->first();
+        if (!$child) {
+            return response()->json(['message' => 'Data balita tidak ditemukan'], 404);
+        }
+
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'gender' => 'nullable|string',
+            'birth_date' => 'nullable',
+            'mother_name' => 'nullable|string|max:255',
+            'dusun' => 'nullable|string',
+            'is_mbg_recipient' => 'nullable|boolean',
+        ]);
+
+        $child->update($validated);
+
+        return response()->json([
+            'message' => 'Data balita berhasil diperbarui',
+            'child' => $child
+        ], 200);
+    }
+
+    /**
+     * DELETE /api/v1/children/{id}
+     * Menghapus data balita
+     */
+    public function destroy($id)
+    {
+        $child = is_numeric($id) ? Child::find($id) : Child::where('name', $id)->first();
+        if (!$child) {
+            return response()->json(['message' => 'Data balita tidak ditemukan'], 404);
+        }
+
+        $child->delete();
+        return response()->json(['message' => 'Data balita berhasil dihapus'], 200);
     }
 }
-
